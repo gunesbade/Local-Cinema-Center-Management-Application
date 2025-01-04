@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.cinemaapp.CashierDashboardController">
+    <top>
+        <Label text="Cashier Dashboard" style="-fx-font-size: 20px; -fx-font-weight: bold;" alignment="CENTER" />
+    </top>
+    <center>
+        <TabPane fx:id="tabPane" style="-fx-padding: 20px;">
+            <tabs>
+                <!-- Search Movies Tab -->
+                <Tab text="Search Movies">
+                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 10px;">
+                        <TextField fx:id="searchField" promptText="Enter movie title..." style="-fx-pref-width: 300px;" />
+                        <HBox spacing="10" alignment="CENTER">
+                            <Button text="Search by Genre" onAction="#handleSearchByGenre" />
+                            <Button text="Search by Partial Name" onAction="#handleSearchByPartialName" />
+                            <Button text="Search by Full Name" onAction="#handleSearchByFullName" />
+
+                        </HBox>
+                        <TableView fx:id="movieTable" style="-fx-pref-width: 600px;">
+                            <columns>
+                                <TableColumn text="Title" fx:id="titleColumn" prefWidth="200" />
+                                <TableColumn text="Genre" fx:id="genreColumn" prefWidth="150" />
+                                <TableColumn text="Summary" fx:id="summaryColumn" prefWidth="250" />
+                                <TableColumn text="Poster" fx:id="posterColumn" prefWidth="100" />
+                            </columns>
+                        </TableView>
+                        <Label fx:id="searchMessageLabel" style="-fx-text-fill: green;" />
+
+                        <!-- Selected Movie Details -->
+                        <VBox spacing="10" alignment="CENTER">
+                            <Label fx:id="selectedMovieTitleLabel" text="Title: " />
+                            <Label fx:id="selectedMovieGenreLabel" text="Genre: " />
+                            <Label fx:id="selectedMovieSummaryLabel" text="Summary: " />
+                            <ImageView fx:id="selectedMoviePoster" fitWidth="200" fitHeight="300" />
+                            <Button text="Proceed to Session Selection" onAction="#loadSessionDetails" />
+
+                        </VBox>
+                    </VBox>
+                </Tab>
+
+                <!-- Select Session Tab -->
+                <Tab text="Select Session">
+                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 10px;">
+                        <Label text="Please select a day, session, and hall for the chosen movie." />
+                        <HBox spacing="10" alignment="CENTER">
+                            <ComboBox fx:id="dayComboBox" promptText="Select Day" />
+                            <ComboBox fx:id="sessionComboBox" promptText="Select Session" />
+                            <ComboBox fx:id="hallComboBox" promptText="Select Hall" />
+                        </HBox>
+                        <Button text="Next" onAction="#handleNextToSeatSelection" />
+
+                        <Label fx:id="sessionMessageLabel" style="-fx-text-fill: green;" />
+                    </VBox>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+    <bottom>
+        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10px;">
+            <Button text="Logout" onAction="#handleLogout" />
+            <Label fx:id="messageLabel" style="-fx-text-fill: green;" />
+        </HBox>
+    </bottom>
+</BorderPane>

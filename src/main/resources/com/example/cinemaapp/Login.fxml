@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.cinemaapp.LoginController">
+    <children>
+        <Label text="Username:" layoutX="50" layoutY="30" />
+        <TextField fx:id="usernameField" layoutX="150" layoutY="30" promptText="Enter your username" focusTraversable="false" />
+
+        <Label text="Password:" layoutX="50" layoutY="70" />
+        <PasswordField fx:id="passwordField" layoutX="150" layoutY="70" promptText="Enter your password" focusTraversable="false" />
+
+        <Button fx:id="loginButton" text="Login" layoutX="150" layoutY="110" onAction="#handleLogin" focusTraversable="false" />
+
+        <Label fx:id="messageLabel" layoutX="150" layoutY="150" text="" />
+    </children>
+</AnchorPane>
+
