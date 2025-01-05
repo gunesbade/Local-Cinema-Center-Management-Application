@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LoginController {
 
@@ -22,49 +23,62 @@ public class LoginController {
     private PasswordField passwordField;
 
     @FXML
-    private Label messageLabel;
+    private Label loginMessageLabel;
+
 
     @FXML
-    private void handleLogin(ActionEvent event) {
+    private Label messageLabel;
+
+    public void handleLogin(ActionEvent event) {
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            messageLabel.setText("Username and password cannot be empty.");
+            loginMessageLabel.setText("Username or password cannot be empty.");
             return;
         }
 
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            String query = "SELECT Role FROM Users WHERE Username = ? AND Password = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
+        String query = "SELECT * FROM Users WHERE Username = ? AND Password = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
             statement.setString(1, username);
             statement.setString(2, password);
 
             ResultSet resultSet = statement.executeQuery();
-
             if (resultSet.next()) {
                 String role = resultSet.getString("Role");
+                loginMessageLabel.setText("Login successful.");
                 loadDashboard(role);
             } else {
-                messageLabel.setText("Invalid username or password.");
+                loginMessageLabel.setText("Invalid username or password.");
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            messageLabel.setText("Error occurred during login.");
+            loginMessageLabel.setText("Error occurred during login. Please try again.");
         }
     }
 
     private void loadDashboard(String role) {
         try {
             Stage currentStage = (Stage) usernameField.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/cinemaapp/CashierDashboard.fxml"));
+            FXMLLoader loader;
+
+            if ("admin".equalsIgnoreCase(role)) {
+                loader = new FXMLLoader(getClass().getResource("/com/example/cinemaapp/AdminDashboard.fxml"));
+            } else if ("cashier".equalsIgnoreCase(role)) {
+                loader = new FXMLLoader(getClass().getResource("/com/example/cinemaapp/CashierDashboard.fxml"));
+            } else {
+                loginMessageLabel.setText("Unknown role. Cannot load dashboard.");
+                return;
+            }
+
             Scene scene = new Scene(loader.load());
             currentStage.setScene(scene);
             currentStage.setTitle("Cinema App - Dashboard");
         } catch (Exception e) {
             e.printStackTrace();
-            messageLabel.setText("Failed to load dashboard.");
+            loginMessageLabel.setText("Failed to load dashboard.");
         }
     }
-
 }

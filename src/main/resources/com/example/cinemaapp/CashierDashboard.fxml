@@ -12,19 +12,18 @@
             <tabs>
                 <!-- Search Movies Tab -->
                 <Tab text="Search Movies">
-                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 10px;">
-                        <TextField fx:id="searchField" promptText="Enter movie title..." style="-fx-pref-width: 300px;" />
+                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
+                        <TextField fx:id="searchField" promptText="Enter movie title or genre..." style="-fx-pref-width: 400px;" />
                         <HBox spacing="10" alignment="CENTER">
                             <Button text="Search by Genre" onAction="#handleSearchByGenre" />
                             <Button text="Search by Partial Name" onAction="#handleSearchByPartialName" />
                             <Button text="Search by Full Name" onAction="#handleSearchByFullName" />
-
                         </HBox>
-                        <TableView fx:id="movieTable" style="-fx-pref-width: 600px;">
+                        <TableView fx:id="movieTable" style="-fx-pref-width: 800px; -fx-pref-height: 400px;">
                             <columns>
                                 <TableColumn text="Title" fx:id="titleColumn" prefWidth="200" />
                                 <TableColumn text="Genre" fx:id="genreColumn" prefWidth="150" />
-                                <TableColumn text="Summary" fx:id="summaryColumn" prefWidth="250" />
+                                <TableColumn text="Summary" fx:id="summaryColumn" prefWidth="350" />
                                 <TableColumn text="Poster" fx:id="posterColumn" prefWidth="100" />
                             </columns>
                         </TableView>
@@ -36,31 +35,75 @@
                             <Label fx:id="selectedMovieGenreLabel" text="Genre: " />
                             <Label fx:id="selectedMovieSummaryLabel" text="Summary: " />
                             <ImageView fx:id="selectedMoviePoster" fitWidth="200" fitHeight="300" />
-                            <Button text="Proceed to Session Selection" onAction="#loadSessionDetails" />
-
+                            <HBox spacing="10" alignment="CENTER">
+                                <Button text="Proceed to Session Selection" onAction="#loadSessionDetails" />
+                                <Button text="Next" onAction="#handleNextToSeatSelection" />
+                            </HBox>
                         </VBox>
                     </VBox>
                 </Tab>
 
                 <!-- Select Session Tab -->
                 <Tab text="Select Session">
-                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 10px;">
+                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
                         <Label text="Please select a day, session, and hall for the chosen movie." />
                         <HBox spacing="10" alignment="CENTER">
                             <ComboBox fx:id="dayComboBox" promptText="Select Day" />
                             <ComboBox fx:id="sessionComboBox" promptText="Select Session" />
                             <ComboBox fx:id="hallComboBox" promptText="Select Hall" />
                         </HBox>
-                        <Button text="Next" onAction="#handleNextToSeatSelection" />
-
+                        <Button text="Next" onAction="#confirmSessionSelection" />
                         <Label fx:id="sessionMessageLabel" style="-fx-text-fill: green;" />
+                    </VBox>
+                </Tab>
+
+                <!-- Seat Selection Tab -->
+                <Tab text="Seat Selection">
+                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
+                        <Label text="Please select your seats for the chosen session." />
+                        <GridPane fx:id="seatGrid" hgap="10" vgap="10" alignment="CENTER" />
+                        <HBox spacing="10" alignment="CENTER">
+                            <Button text="Add to Cart" onAction="#addToCart" />
+                            <Button text="Go Back to Session Selection" onAction="#backToSessionSelection" />
+                        </HBox>
+                        <Label fx:id="cartMessageLabel" style="-fx-text-fill: green;" />
+                    </VBox>
+                </Tab>
+
+                <!-- Additional Products and Discounts Tab -->
+                <Tab text="Additional Products and Discounts">
+                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
+                        <Label text="Enter Customer Details for Discounts and Select Additional Products" />
+                        <HBox spacing="10" alignment="CENTER">
+                            <VBox spacing="10">
+                                <Label text="Customer First Name:" />
+                                <TextField fx:id="customerFirstNameField" promptText="Enter First Name" />
+                            </VBox>
+                            <VBox spacing="10">
+                                <Label text="Customer Last Name:" />
+                                <TextField fx:id="customerLastNameField" promptText="Enter Last Name" />
+                            </VBox>
+                        </HBox>
+                        <TableView fx:id="productTable">
+                            <columns>
+                                <TableColumn text="Product Name" fx:id="productNameColumn" />
+                                <TableColumn text="Price" fx:id="productPriceColumn" />
+                                <TableColumn text="Stock Quantity" fx:id="productStockColumn" />
+                            </columns>
+                        </TableView>
+                        <Label fx:id="cartTotalLabel" text="Total: $" style="-fx-font-size: 14px;" />
+                        <HBox spacing="10" alignment="CENTER">
+                            <Button text="Next" onAction="#proceedToFinalStage" />
+                            <Button text="Back to Seat Selection" onAction="#backToSeatSelection" />
+                        </HBox>
+                        <Label fx:id="discountMessageLabel" style="-fx-text-fill: green;" />
                     </VBox>
                 </Tab>
             </tabs>
         </TabPane>
     </center>
     <bottom>
-        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10px;">
+        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
             <Button text="Logout" onAction="#handleLogout" />
             <Label fx:id="messageLabel" style="-fx-text-fill: green;" />
         </HBox>

@@ -46,6 +46,18 @@
             </plugin>
         </plugins>
     </build>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+            <source>20</source> <!-- Kullanılan Java sürümünü ayarlayın -->
+            <target>20</target>
+            <compilerArgs>
+                <arg>--enable-preview</arg>
+            </compilerArgs>
+        </configuration>
+    </plugin>
 
 
 

@@ -14,6 +14,8 @@
         <Button fx:id="loginButton" text="Login" layoutX="150" layoutY="110" onAction="#handleLogin" focusTraversable="false" />
 
         <Label fx:id="messageLabel" layoutX="150" layoutY="150" text="" />
+        <Label fx:id="loginMessageLabel" text="" style="-fx-text-fill: red;" />
+
     </children>
 </AnchorPane>
 
