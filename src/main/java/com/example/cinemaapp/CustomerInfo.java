@@ -1,44 +1,36 @@
 package com.example.cinemaapp;
 
+import java.math.BigDecimal;
+
 public class CustomerInfo {
     private String name;
-    private String birthDate;
-    private int age; // Yeni bir age alanı ekliyoruz
+    private String surname;
+    private BigDecimal discountRate; // 0.00 or 0.50
 
-    // Argümanlı constructor
-    public CustomerInfo(String name, String birthDate) {
-        this.name = name;
-        this.birthDate = birthDate;
-    }
-
-    // Varsayılan constructor
     public CustomerInfo() {
+        this.name = "";
+        this.surname = "";
+        this.discountRate = BigDecimal.ZERO;
     }
 
-    // Getter ve Setter'lar
     public String getName() {
         return name;
     }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String n) {
+        this.name = n;
     }
 
-    public String getBirthDate() {
-        return birthDate;
+    public String getSurname() {
+        return surname;
+    }
+    public void setSurname(String s) {
+        this.surname = s;
     }
 
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+    public BigDecimal getDiscountRate() {
+        return discountRate;
     }
-
-    // Yeni age alanı için getter ve setter
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
+    public void setDiscountRate(BigDecimal d) {
+        this.discountRate = d;
     }
 }
-

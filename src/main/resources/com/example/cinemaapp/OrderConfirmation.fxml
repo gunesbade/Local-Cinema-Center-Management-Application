@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.cinemaapp.OrderConfirmationController"
+      spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+    <Label text="Order Confirmation" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+    <Label fx:id="movieTitleLabel" text="Movie Title: " wrapText="true"/>
+    <Label fx:id="seatNumbersLabel" text="Seats: " wrapText="true"/>
+    <Label fx:id="productListLabel" text="Products: " wrapText="true"/>
+    <Label fx:id="ticketTotalLabel" text="Ticket Total: " wrapText="true"/>
+    <Label fx:id="productTotalLabel" text="Product Total: " wrapText="true"/>
+    <Label fx:id="grandTotalLabel" text="Grand Total: " wrapText="true"/>
+</VBox>
