@@ -333,6 +333,12 @@ public class CashierDashboardController {
             if (rs.next()) {
                 selectedSessionID = rs.getInt("SessionID");
                 sessionMessageLabel.setText("Session confirmed: " + d + " " + t + " " + h);
+
+                // Önceki koltuk seçimlerini sıfırla
+                selectedSeats.clear();
+                sessionSelectedSeats.clear();
+                cartMessageLabel.setText(""); // Seçim mesajını sıfırla
+
                 tabPane.getSelectionModel().selectNext();
             } else {
                 sessionMessageLabel.setText("No matching session found.");
@@ -726,6 +732,7 @@ public class CashierDashboardController {
 
         return total; // Tüm ürünlerin toplam fiyatını döndür
     }
+
     @FXML
     private void handleConfirmOrder(ActionEvent event) {
         if (selectedSeats.isEmpty()) {
@@ -748,7 +755,6 @@ public class CashierDashboardController {
             BigDecimal totalTicketCost = BigDecimal.ZERO;
 
             for (String seat : selectedSeats) {
-                // Daha önce bu koltuğun rezervasyonu yapılmış mı kontrol et
                 checkStmt.setInt(1, selectedSessionID);
                 checkStmt.setString(2, seat);
                 ResultSet rs = checkStmt.executeQuery();
@@ -763,12 +769,10 @@ public class CashierDashboardController {
                     throw new SQLException("Customer info for seat " + seat + " is missing.");
                 }
 
-                // İndirim uygulanmış fiyatı hesapla
                 BigDecimal discountRate = customerInfo.getDiscountRate();
                 BigDecimal discountedPrice = basePrice.multiply(BigDecimal.ONE.subtract(discountRate));
-                BigDecimal finalPrice = discountedPrice.multiply(new BigDecimal("1.20")); // %20 KDV
+                BigDecimal finalPrice = discountedPrice.multiply(new BigDecimal("1.20"));
 
-                // SQL sorgusu için parametreleri ayarla
                 ticketStmt.setInt(1, selectedSessionID);
                 ticketStmt.setString(2, customerInfo.getName() + " " + customerInfo.getSurname());
                 ticketStmt.setString(3, seat);
@@ -783,7 +787,6 @@ public class CashierDashboardController {
             ticketStmt.executeBatch();
             conn.commit(); // Transaction onayla
 
-            // === 2. Ürün İşleme ===
             if (!selectedProducts.isEmpty()) {
                 String updateProductSql = "UPDATE Products SET StockQuantity = StockQuantity - ? WHERE ProductID = ?";
                 PreparedStatement productStmt = conn.prepareStatement(updateProductSql);
@@ -793,26 +796,27 @@ public class CashierDashboardController {
                         throw new SQLException("Not enough stock for product: " + product.getProductName());
                     }
 
-                    productStmt.setInt(1, product.getQuantity()); // Azaltılacak miktar
-                    productStmt.setInt(2, product.getProductID()); // Ürün ID'si
+                    productStmt.setInt(1, product.getQuantity());
+                    productStmt.setInt(2, product.getProductID());
                     productStmt.addBatch();
                 }
 
-                productStmt.executeBatch(); // Tüm ürün stoklarını güncelle
+                productStmt.executeBatch();
                 System.out.println("Product stocks updated successfully.");
             }
 
-            conn.commit(); // Transaction onayla
-            // Başarılı işlem mesajı
+            conn.commit();
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Order Confirmation");
             alert.setHeaderText("Order Confirmed Successfully");
             alert.setContentText("Tickets and products have been successfully saved.");
             alert.showAndWait();
 
+            // Filtreleri ve seçimleri sıfırla
+            resetFiltersAndSelections();
 
-
-            // Dashboard'a geri dön
+            // Ana ekrana dön
             tabPane.getSelectionModel().select(0);
 
         } catch (SQLException e) {
@@ -853,6 +857,42 @@ public class CashierDashboardController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private void resetFiltersAndSelections() {
+        // Filtreleri sıfırla
+        searchField.clear();
+        searchMessageLabel.setText("");
+        movieList.clear();
+        movieTable.getSelectionModel().clearSelection();
+        selectedMovie = null;
+        selectedMovieTitleLabel.setText("");
+        selectedMovieGenreLabel.setText("");
+        selectedMovieSummaryLabel.setText("");
+        selectedMoviePoster.setImage(null);
+
+        // Seans ve koltuk bilgilerini sıfırla
+        dayComboBox.getItems().clear();
+        sessionComboBox.getItems().clear();
+        hallComboBox.getItems().clear();
+        sessionMessageLabel.setText("");
+        selectedSessionID = 0;
+        selectedSeats.clear();
+        sessionSelectedSeats.clear();
+        seatGrid.getChildren().clear();
+        cartMessageLabel.setText("");
+
+        // Ürün seçimlerini sıfırla
+        productTable.getItems().clear();
+        selectedProducts.clear();
+        cartTotalLabel.setText("");
+
+        // Müşteri bilgilerini sıfırla
+        customerFirstNameField.clear();
+        customerLastNameField.clear();
+        customerInfoContainer.getChildren().clear();
+        customerInfoMap.clear();
+
+        System.out.println("All filters and selections have been reset.");
     }
 
 
