@@ -109,7 +109,6 @@
                         <Label text="Review and confirm your order."/>
                         <Button text="Show My Order" onAction="#showMyOrder"/>
                         <Button fx:id="confirmOrderButton" onAction="#handleConfirmOrder" text="Confirm Order" />
-                        <Button text="Finalize Reservation" onAction="#finalizeReservation"/>
                     </VBox>
                 </Tab>
             </tabs>
