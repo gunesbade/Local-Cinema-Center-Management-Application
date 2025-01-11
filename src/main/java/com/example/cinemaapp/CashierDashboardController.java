@@ -701,7 +701,6 @@ public class CashierDashboardController {
             }
 
             ticketStmt.executeBatch();
-            conn.commit(); // Transaction onayla
 
             if (!selectedProducts.isEmpty()) {
                 String updateProductSql = "UPDATE Products SET StockQuantity = StockQuantity - ? WHERE ProductID = ?";
@@ -723,10 +722,22 @@ public class CashierDashboardController {
 
             conn.commit();
 
+            // === PDF Fatura Oluşturma ===
+            String customerDetails = customerFirstNameField.getText() + " " + customerLastNameField.getText();
+            String ticketDetails = String.join(", ", selectedSeats);
+            String productDetails = selectedProducts.stream()
+                    .map(p -> p.getProductName() + " x" + p.getQuantity())
+                    .reduce("", (a, b) -> a + ", " + b);
+            String totalAmount = "Total Price: " + cartTotalLabel.getText();
+
+            String fileName = "invoice_" + System.currentTimeMillis() + ".pdf";
+            PDFInvoiceGenerator.generateInvoice(fileName, customerDetails, ticketDetails, productDetails, totalAmount);
+
+            // Kullanıcıya başarı mesajı
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Order Confirmation");
             alert.setHeaderText("Order Confirmed Successfully");
-            alert.setContentText("Tickets and products have been successfully saved.");
+            alert.setContentText("Invoice has been generated and saved as: " + fileName);
             alert.showAndWait();
 
             // Filtreleri ve seçimleri sıfırla
@@ -744,10 +755,6 @@ public class CashierDashboardController {
             alert.showAndWait();
         }
     }
-
-
-
-
 
 
     @FXML
