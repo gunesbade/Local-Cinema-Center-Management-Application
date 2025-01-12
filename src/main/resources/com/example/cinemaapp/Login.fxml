@@ -3,19 +3,65 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<!--
+ * AnchorPane layout for the login screen.
+ * This screen includes fields for entering a username and password, a login button,
+ * and labels for displaying messages to the user.
+ -->
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.cinemaapp.LoginController">
     <children>
+
+        <!--
+         * Username Label
+         * Displays the text "Username:" next to the username input field.
+         -->
         <Label text="Username:" layoutX="50" layoutY="30" />
-        <TextField fx:id="usernameField" layoutX="150" layoutY="30" promptText="Enter your username" focusTraversable="false" />
 
+        <!--
+         * Username TextField
+         * Input field for entering the username.
+         * ID: usernameField
+         -->
+        <TextField fx:id="usernameField" layoutX="150" layoutY="30"
+                   promptText="Enter your username" focusTraversable="false" />
+
+        <!--
+         * Password Label
+         * Displays the text "Password:" next to the password input field.
+         -->
         <Label text="Password:" layoutX="50" layoutY="70" />
-        <PasswordField fx:id="passwordField" layoutX="150" layoutY="70" promptText="Enter your password" focusTraversable="false" />
 
-        <Button fx:id="loginButton" text="Login" layoutX="150" layoutY="110" onAction="#handleLogin" focusTraversable="false" />
+        <!--
+         * PasswordField
+         * Input field for entering the password.
+         * ID: passwordField
+         -->
+        <PasswordField fx:id="passwordField" layoutX="150" layoutY="70"
+                       promptText="Enter your password" focusTraversable="false" />
 
+        <!--
+         * Login Button
+         * Button for submitting the login credentials.
+         * Triggers the `handleLogin` method in the controller.
+         * ID: loginButton
+         -->
+        <Button fx:id="loginButton" text="Login" layoutX="150" layoutY="110"
+                onAction="#handleLogin" focusTraversable="false" />
+
+        <!--
+         * Message Label
+         * Label for displaying feedback messages (e.g., success or failure messages).
+         * ID: messageLabel
+         -->
         <Label fx:id="messageLabel" layoutX="150" layoutY="150" text="" />
+
+        <!--
+         * Login Message Label
+         * Label for displaying login error messages.
+         * Styled with red text.
+         * ID: loginMessageLabel
+         -->
         <Label fx:id="loginMessageLabel" text="" style="-fx-text-fill: red;" />
 
     </children>
 </AnchorPane>
-

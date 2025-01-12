@@ -3,34 +3,61 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
 
+<!--
+ * The main layout for the movie search application.
+ * This VBox contains elements for searching movies and displaying results in a table.
+ -->
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.cinemaapp.SearchMovieController"
       spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
-    <!-- Başlık -->
+
+    <!--
+     * Title Label
+     * Displays the title of the application: "Search Movies."
+     -->
     <Label text="Search Movies" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
 
-    <!-- Arama Alanı -->
+    <!--
+     * Search Field
+     * A text field for entering the movie title.
+     * ID: searchField
+     -->
     <TextField fx:id="searchField" promptText="Enter movie title..." style="-fx-pref-width: 300px;" />
 
-    <!-- Arama Butonları -->
+    <!--
+     * Search Buttons
+     * A horizontal layout containing buttons for different search options:
+     * - Search by Genre
+     * - Search by Partial Name
+     * - Search by Full Name
+     -->
     <HBox spacing="10" alignment="CENTER">
         <Button text="Search by Genre" onAction="#handleSearchByGenre" />
         <Button text="Search by Partial Name" onAction="#handleSearchByPartialName" />
         <Button text="Search by Full Name" onAction="#handleSearchByFullName" />
     </HBox>
 
-
-
-    <!-- Sonuçları Gösteren Tablo -->
+    <!--
+     * Movie Table
+     * Displays search results in a table with the following columns:
+     * - Title
+     * - Genre
+     * - Summary
+     * - Poster
+     * ID: movieTable
+     -->
     <TableView fx:id="movieTable" style="-fx-pref-width: 600px;">
         <columns>
             <TableColumn text="Title" fx:id="titleColumn" prefWidth="200" />
             <TableColumn text="Genre" fx:id="genreColumn" prefWidth="150" />
             <TableColumn text="Summary" fx:id="summaryColumn" prefWidth="250" />
             <TableColumn text="Poster" fx:id="posterColumn" prefWidth="100" />
-
         </columns>
     </TableView>
 
-    <!-- Bilgi Mesajı -->
+    <!--
+     * Message Label
+     * Displays feedback messages to the user, e.g., success or error messages.
+     * ID: messageLabel
+     -->
     <Label fx:id="messageLabel" style="-fx-text-fill: green;" />
 </VBox>

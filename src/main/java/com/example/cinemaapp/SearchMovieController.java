@@ -13,6 +13,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Controller for the movie search screen.
+ * Manages user interactions and handles movie search logic.
+ */
 public class SearchMovieController {
 
     @FXML
@@ -38,6 +42,10 @@ public class SearchMovieController {
 
     private ObservableList<Movie> movieList = FXCollections.observableArrayList();
 
+    /**
+     * Initializes the table columns to display movie properties.
+     * Automatically called after the FXML file is loaded.
+     */
     @FXML
     public void initialize() {
         titleColumn.setCellValueFactory(data -> data.getValue().titleProperty());
@@ -45,7 +53,12 @@ public class SearchMovieController {
         summaryColumn.setCellValueFactory(data -> data.getValue().summaryProperty());
     }
 
-
+    /**
+     * Handles the action of searching movies by genre.
+     * Retrieves movies from the database based on the entered genre.
+     *
+     * @param event the action event triggered by the button click.
+     */
     @FXML
     private void handleSearchByGenre(ActionEvent event) {
         String genre = searchField.getText().trim();
@@ -56,6 +69,12 @@ public class SearchMovieController {
         searchMovies("Genre", genre);
     }
 
+    /**
+     * Handles the action of searching movies by partial name.
+     * Retrieves movies from the database whose titles match the partial input.
+     *
+     * @param event the action event triggered by the button click.
+     */
     @FXML
     private void handleSearchByPartialName(ActionEvent event) {
         String partialName = searchField.getText().trim();
@@ -66,6 +85,12 @@ public class SearchMovieController {
         searchMovies("Title", "%" + partialName + "%");
     }
 
+    /**
+     * Handles the action of searching movies by full name.
+     * Retrieves movies from the database whose titles exactly match the input.
+     *
+     * @param event the action event triggered by the button click.
+     */
     @FXML
     private void handleSearchByFullName(ActionEvent event) {
         String fullName = searchField.getText().trim();
@@ -76,6 +101,13 @@ public class SearchMovieController {
         searchMovies("Title", fullName);
     }
 
+    /**
+     * Searches for movies in the database based on the specified column and value.
+     * Updates the table with the retrieved results or shows an appropriate message if no results are found.
+     *
+     * @param column the database column to search (e.g., "Genre" or "Title").
+     * @param value  the search value for the specified column.
+     */
     private void searchMovies(String column, String value) {
         movieList.clear();
 
@@ -92,20 +124,20 @@ public class SearchMovieController {
                 String summary = resultSet.getString("Summary");
                 String posterPath = resultSet.getString("Poster");
 
-                // Poster için ImageView oluştur
+                // Create an ImageView for the poster
                 ImageView poster = null;
                 if (posterPath != null && !posterPath.isEmpty()) {
                     poster = new ImageView(new javafx.scene.image.Image("file:" + posterPath));
-                    poster.setFitWidth(100); // Görüntü genişliği
-                    poster.setFitHeight(150); // Görüntü yüksekliği
+                    poster.setFitWidth(100); // Set the image width
+                    poster.setFitHeight(150); // Set the image height
                 }
 
-                // Movie nesnesini oluştur ve listeye ekle
-                int id = resultSet.getInt("MovieID"); // MovieID sütununu alın
+                // Create a Movie object and add it to the list
+                int id = resultSet.getInt("MovieID"); // Fetch the MovieID column
                 movieList.add(new Movie(id, title, genre, summary, poster));
             }
 
-                if (movieList.isEmpty()) {
+            if (movieList.isEmpty()) {
                 messageLabel.setText("No movies found.");
             } else {
                 messageLabel.setText("Movies loaded successfully.");

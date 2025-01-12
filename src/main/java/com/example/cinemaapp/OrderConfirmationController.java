@@ -7,6 +7,10 @@ import javafx.scene.control.Label;
 import java.math.BigDecimal;
 import java.util.Set;
 
+/**
+ * Controller class for managing the order confirmation screen.
+ * Displays the selected movie, seats, products, and calculates totals for the order.
+ */
 public class OrderConfirmationController {
 
     @FXML
@@ -21,32 +25,38 @@ public class OrderConfirmationController {
     private Label productTotalLabel;
     @FXML
     private Label grandTotalLabel;
+
+    /**
+     * Handles the order confirmation action.
+     * Prints a confirmation message to the console and can be extended for further actions,
+     * such as redirecting the user to the home screen.
+     */
     @FXML
     private void handleConfirmOrder() {
         System.out.println("Order confirmed!");
-        // İşlem başarılı mesajı ve ana sayfaya yönlendirme işlemleri
+        // Display success message and redirect to the home screen
     }
 
 
     /**
-     * Sipariş özetini yükler ve UI üzerinde gösterir.
+     * Loads the order summary details into the UI components.
      *
-     * @param movie       Seçilen film bilgisi
-     * @param seats       Seçilen koltuklar
-     * @param products    Seçilen ürünler
-     * @param ticketTotal Biletlerin toplam fiyatı
-     * @param productTotal Ürünlerin toplam fiyatı
-     * @param grandTotal  Genel toplam fiyat
+     * @param movie        The selected movie information.
+     * @param seats        The set of selected seat numbers.
+     * @param products     The list of selected products.
+     * @param ticketTotal  The total cost of the tickets.
+     * @param productTotal The total cost of the products.
+     * @param grandTotal   The overall total cost (tickets + products).
      */
     public void loadOrderSummary(Movie movie, Set<String> seats, ObservableList<Product> products,
                                  BigDecimal ticketTotal, BigDecimal productTotal, BigDecimal grandTotal) {
-        // Film bilgisi
+        // Display movie information
         movieTitleLabel.setText("Movie: " + movie.getTitle());
 
-        // Koltuk bilgileri
+        // Display seat information
         seatNumbersLabel.setText("Seats: " + String.join(", ", seats));
 
-        // Ürün bilgileri
+        // Display product information
         StringBuilder productDetails = new StringBuilder();
         for (Product product : products) {
             BigDecimal lineTotal = product.getPrice()
@@ -58,7 +68,7 @@ public class OrderConfirmationController {
         }
         productListLabel.setText(productDetails.toString());
 
-        // Toplam fiyat bilgileri
+        // Display total prices
         ticketTotalLabel.setText("Ticket Total: $" + ticketTotal);
         productTotalLabel.setText("Product Total: $" + productTotal);
         grandTotalLabel.setText("Grand Total: $" + grandTotal);

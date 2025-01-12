@@ -2,14 +2,60 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<!--
+ * VBox Layout for the Order Confirmation screen.
+ * This layout contains labels to display order details such as movie title, seat numbers, product list,
+ * and the total amounts for tickets and products.
+ -->
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.cinemaapp.OrderConfirmationController"
       spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+
+    <!--
+     * Title Label
+     * Displays the title of the page: "Order Confirmation."
+     -->
     <Label text="Order Confirmation" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+    <!--
+     * Movie Title Label
+     * Displays the title of the selected movie.
+     * ID: movieTitleLabel
+     -->
     <Label fx:id="movieTitleLabel" text="Movie Title: " wrapText="true"/>
+
+    <!--
+     * Seat Numbers Label
+     * Displays the seat numbers selected for the movie.
+     * ID: seatNumbersLabel
+     -->
     <Label fx:id="seatNumbersLabel" text="Seats: " wrapText="true"/>
+
+    <!--
+     * Product List Label
+     * Displays the list of products purchased.
+     * ID: productListLabel
+     -->
     <Label fx:id="productListLabel" text="Products: " wrapText="true"/>
+
+    <!--
+     * Ticket Total Label
+     * Displays the total cost of the movie tickets.
+     * ID: ticketTotalLabel
+     -->
     <Label fx:id="ticketTotalLabel" text="Ticket Total: " wrapText="true"/>
+
+    <!--
+     * Product Total Label
+     * Displays the total cost of the purchased products.
+     * ID: productTotalLabel
+     -->
     <Label fx:id="productTotalLabel" text="Product Total: " wrapText="true"/>
+
+    <!--
+     * Grand Total Label
+     * Displays the grand total of the order, including tickets and products.
+     * ID: grandTotalLabel
+     -->
     <Label fx:id="grandTotalLabel" text="Grand Total: " wrapText="true"/>
 </VBox>
