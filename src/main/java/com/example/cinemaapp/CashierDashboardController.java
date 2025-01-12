@@ -702,6 +702,7 @@ public class CashierDashboardController {
 
             ticketStmt.executeBatch();
 
+            BigDecimal totalProductCost = BigDecimal.ZERO;
             if (!selectedProducts.isEmpty()) {
                 String updateProductSql = "UPDATE Products SET StockQuantity = StockQuantity - ? WHERE ProductID = ?";
                 PreparedStatement productStmt = conn.prepareStatement(updateProductSql);
@@ -714,6 +715,11 @@ public class CashierDashboardController {
                     productStmt.setInt(1, product.getQuantity());
                     productStmt.setInt(2, product.getProductID());
                     productStmt.addBatch();
+
+                    BigDecimal lineTotal = product.getPrice()
+                            .multiply(new BigDecimal(product.getQuantity()))
+                            .multiply(new BigDecimal("1.10")); // %10 KDV
+                    totalProductCost = totalProductCost.add(lineTotal);
                 }
 
                 productStmt.executeBatch();
@@ -722,16 +728,17 @@ public class CashierDashboardController {
 
             conn.commit();
 
+            BigDecimal grandTotal = totalTicketCost.add(totalProductCost);
+
             // === PDF Fatura Oluşturma ===
             String customerDetails = customerFirstNameField.getText() + " " + customerLastNameField.getText();
             String ticketDetails = String.join(", ", selectedSeats);
             String productDetails = selectedProducts.stream()
                     .map(p -> p.getProductName() + " x" + p.getQuantity())
                     .reduce("", (a, b) -> a + ", " + b);
-            String totalAmount = "Total Price: " + cartTotalLabel.getText();
 
             String fileName = "invoice_" + System.currentTimeMillis() + ".pdf";
-            PDFInvoiceGenerator.generateInvoice(fileName, customerDetails, ticketDetails, productDetails, totalAmount);
+            PDFInvoiceGenerator.generateInvoice(fileName, customerDetails, ticketDetails, productDetails, totalTicketCost, totalProductCost);
 
             // Kullanıcıya başarı mesajı
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -755,6 +762,7 @@ public class CashierDashboardController {
             alert.showAndWait();
         }
     }
+
 
 
     @FXML

@@ -7,10 +7,18 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 public class PDFInvoiceGenerator {
 
-    public static void generateInvoice(String fileName, String customerDetails, String ticketDetails, String productDetails, String totalAmount) {
+    public static void generateInvoice(
+            String fileName,
+            String customerDetails,
+            String ticketDetails,
+            String productDetails,
+            BigDecimal ticketTotal,
+            BigDecimal productTotal
+    ) {
         try (PDDocument document = new PDDocument()) {
             // Yeni bir sayfa oluştur
             PDPage page = new PDPage(PDRectangle.A4);
@@ -35,7 +43,13 @@ public class PDFInvoiceGenerator {
                 contentStream.newLineAtOffset(0, -20);
                 contentStream.showText("Products: " + productDetails);
                 contentStream.newLineAtOffset(0, -20);
-                contentStream.showText("Total Amount: " + totalAmount);
+                contentStream.showText("Ticket Total: $" + ticketTotal);
+                contentStream.newLineAtOffset(0, -20);
+                contentStream.showText("Product Total: $" + productTotal);
+                contentStream.newLineAtOffset(0, -20);
+
+                BigDecimal grandTotal = ticketTotal.add(productTotal);
+                contentStream.showText("Grand Total: $" + grandTotal);
                 contentStream.newLineAtOffset(0, -20);
                 contentStream.showText("Thank you for your purchase!");
                 contentStream.endText();
