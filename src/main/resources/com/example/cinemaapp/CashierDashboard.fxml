@@ -11,12 +11,12 @@
                alignment="CENTER" />
     </top>
     <center>
-        <TabPane fx:id="tabPane" style="-fx-padding: 20px;">
+        <TabPane fx:id="tabPane" style="-fx-padding: 20px;" >
             <tabs>
                 <Tab text="Search Movies">
-                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
+                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;" >
                         <TextField fx:id="searchField" promptText="Enter movie title or genre..."
-                                   style="-fx-pref-width: 400px;" />
+                                   style="-fx-pref-width: 800px;" />
                         <HBox spacing="10" alignment="CENTER">
                             <Button text="Search by Genre" onAction="#handleSearchByGenre" />
                             <Button text="Search by Partial Name" onAction="#handleSearchByPartialName" />
@@ -30,6 +30,7 @@
                                 <TableColumn text="Poster" fx:id="posterColumn" prefWidth="100"/>
                             </columns>
                         </TableView>
+
                         <Label fx:id="searchMessageLabel" style="-fx-text-fill: green;" />
                         <VBox spacing="10" alignment="CENTER">
                             <Label fx:id="selectedMovieTitleLabel" text="Title:"/>
@@ -91,18 +92,23 @@
                 </Tab>
 
                 <Tab text="Customer Info">
-                    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
-                        <Label text="Enter Customer's Name for each Seat + choose discount."/>
-                        <VBox fx:id="customerInfoContainer" spacing="10" style="-fx-border-color: gray; -fx-padding: 20px;"/>
-                        <HBox spacing="10" alignment="CENTER">
-                            <Label text="First Name (General):"/>
-                            <TextField fx:id="customerFirstNameField"/>
-                            <Label text="Last Name (General):"/>
-                            <TextField fx:id="customerLastNameField"/>
-                        </HBox>
-                        <Button text="Next -> Final Stage" onAction="#proceedToFinalStage"/>
-                    </VBox>
+                    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-padding: 20px;">
+                        <content>
+                            <VBox spacing="10" alignment="CENTER">
+                                <Label text="Enter Customer's Name for each Seat + choose discount."/>
+                                <VBox fx:id="customerInfoContainer" spacing="10" style="-fx-border-color: gray; -fx-padding: 20px;"/>
+                                <HBox spacing="10" alignment="CENTER">
+                                    <Label text="First Name (invoice):"/>
+                                    <TextField fx:id="customerFirstNameField"/>
+                                    <Label text="Last Name (invoice):"/>
+                                    <TextField fx:id="customerLastNameField"/>
+                                </HBox>
+                                <Button text="Next -> Final Stage" onAction="#proceedToFinalStage"/>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
                 </Tab>
+
 
                 <Tab text="Final Stage">
                     <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20px;">
