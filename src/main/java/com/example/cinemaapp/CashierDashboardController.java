@@ -18,10 +18,16 @@ import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+
 
 public class CashierDashboardController {
 
@@ -572,12 +578,17 @@ public class CashierDashboardController {
         }
     }
 
+
+
     @FXML
     private void proceedToFinalStage() {
         String fName = customerFirstNameField.getText().trim();
         String lName = customerLastNameField.getText().trim();
+
+
+
         if (fName.isEmpty() || lName.isEmpty()) {
-            discountMessageLabel.setText("Lütfen Müşteri Adı/Soyadı giriniz (genel).");
+            discountMessageLabel.setText("Please enter customer Name/Surname giriniz (general).");
             return;
         }
         tabPane.getSelectionModel().selectNext();
@@ -631,6 +642,34 @@ public class CashierDashboardController {
 
         return total;
     }
+
+    private BigDecimal calculateTicketTotalWithTax() {
+        if (selectedSeats == null || selectedSeats.isEmpty() || basePrice == null) {
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (String seat : selectedSeats) {
+            CustomerInfo customerInfo = customerInfoMap.get(seat);
+            if (customerInfo != null) {
+                BigDecimal discountRate = customerInfo.getDiscountRate(); // İndirim oranı
+                // İndirimli bilet ücreti:
+                BigDecimal discountedPrice = basePrice.multiply(BigDecimal.ONE.subtract(discountRate));
+                // + %20 vergi
+                BigDecimal finalPrice = discountedPrice.multiply(new BigDecimal("1.20"));
+                total = total.add(finalPrice);
+            } else {
+                // İndirim yoksa direkt bilet ücreti + %20 vergi
+                BigDecimal finalPrice = basePrice.multiply(new BigDecimal("1.20"));
+                total = total.add(finalPrice);
+            }
+        }
+
+        return total;
+    }
+
+
     private BigDecimal calculateProductTotal() {
         if (selectedProducts == null || selectedProducts.isEmpty()) {
             return BigDecimal.ZERO; // Seçili ürün yoksa toplam 0
@@ -726,7 +765,7 @@ public class CashierDashboardController {
                 System.out.println("Product stocks updated successfully.");
             }
 
-            conn.commit();
+            conn.commit(); // Ticket ve product update commit
 
             BigDecimal grandTotal = totalTicketCost.add(totalProductCost);
 
@@ -739,6 +778,26 @@ public class CashierDashboardController {
 
             String fileName = "invoice_" + System.currentTimeMillis() + ".pdf";
             PDFInvoiceGenerator.generateInvoice(fileName, customerDetails, ticketDetails, productDetails, totalTicketCost, totalProductCost);
+
+            // --------------- PDF'yi "invoices" tablosuna kaydetme ---------------
+            try {
+                Path pdfPath = Paths.get(fileName); // <-- Path ve Paths burada lazım
+                byte[] pdfBytes = Files.readAllBytes(pdfPath); // <-- Files burada lazım
+
+                // Örneğin customer_name ve pdf_file alanları var diyelim
+                String insertInvoiceSql = "INSERT INTO invoices (customer_name, pdf_file) VALUES (?, ?)";
+                try (PreparedStatement invoiceStmt = conn.prepareStatement(insertInvoiceSql)) {
+                    invoiceStmt.setString(1, customerDetails);
+                    invoiceStmt.setBytes(2, pdfBytes);
+                    invoiceStmt.executeUpdate();
+                    System.out.println("Invoice PDF saved into 'invoices' table!");
+                }
+                conn.commit(); // <-- PDF'yi de tabloya ekledik, commit edelim
+            } catch (IOException ioEx) {
+                ioEx.printStackTrace();
+                // Hata durumunda rollback etmek isterseniz
+                // conn.rollback();
+            }
 
             // Kullanıcıya başarı mesajı
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -774,7 +833,7 @@ public class CashierDashboardController {
             OrderConfirmationController occ = loader.getController();
 
             // Gerekli verileri hesapla
-            BigDecimal ticketTotal = calculateTicketTotal();
+            BigDecimal ticketTotal = calculateTicketTotalWithTax();
             BigDecimal productTotal = calculateProductTotal();
             BigDecimal grandTotal = ticketTotal.add(productTotal);
 
